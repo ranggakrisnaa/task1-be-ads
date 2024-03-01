@@ -1,6 +1,7 @@
 const { User, sequelize } = require('../db/models/index')
 const { ErrHandler } = require('../middlewares/errHandlerMiddleware')
 const BcryptUtil = require('../utils/bcryptUtil')
+const fs = require('fs')
 
 class UserController {
     static async getAllUser(req, res, next) {
@@ -82,9 +83,15 @@ class UserController {
                 lastName: lastName || foundUser.lastName,
                 username: username || foundUser.username,
                 email: email || foundUser.email,
-                phoneNumber: phoneNumber || foundUser.phoneNumber
+                phoneNumber: phoneNumber || foundUser.phoneNumber,
             }
-            console.log(req.file);
+
+            const filename = foundUser.imgUrl.split("/").pop();
+            const folderPath = `public/images/${filename}`;
+            if (fs.existsSync(folderPath)) {
+                fs.unlinkSync(folderPath)
+            }
+
             if (req.file) {
                 const imagePath = `http://localhost:${process.env.PORT}/images/${req.file.filename}`;
                 payload = {
@@ -131,7 +138,11 @@ class UserController {
                     if (!foundUser) {
                         throw new ErrHandler(404, 'User is not found.');
                     }
-
+                    const filename = foundUser.imgUrl && foundUser.imgUrl.split("/").pop();
+                    const folderPath = `public/images/${filename}`;
+                    if (fs.existsSync(folderPath)) {
+                        fs.unlinkSync(folderPath)
+                    }
                     await foundUser.destroy({ transaction: t });
                 }
             } else {
@@ -139,7 +150,11 @@ class UserController {
                 if (!foundUser) {
                     throw new ErrHandler(404, 'User is not found.');
                 }
-
+                const filename = foundUser.imgUrl && foundUser.imgUrl.split("/").pop();
+                const folderPath = `public/images/${filename}`;
+                if (fs.existsSync(folderPath)) {
+                    fs.unlinkSync(folderPath)
+                }
                 await foundUser.destroy({ transaction: t });
             }
 
