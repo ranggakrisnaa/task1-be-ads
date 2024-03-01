@@ -86,7 +86,7 @@ class UserController {
                 phoneNumber: phoneNumber || foundUser.phoneNumber,
             }
 
-            const filename = foundUser.imgUrl.split("/").pop();
+            const filename = foundUser.imgUrl && foundUser.imgUrl.split("/").pop();
             const folderPath = `public/images/${filename}`;
             if (fs.existsSync(folderPath)) {
                 fs.unlinkSync(folderPath)
