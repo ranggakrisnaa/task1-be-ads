@@ -20,7 +20,7 @@ app.get('/', (req, res) => {
         message: "Hello, successful access to this API."
     })
 })
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
+app.use('api/v1/docs', swaggerUi.serve, swaggerUi.setup(swaggerFile))
 app.use('/api/v1/', authRoute)
 app.use(handleError)
 
