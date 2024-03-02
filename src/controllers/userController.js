@@ -113,7 +113,7 @@ class UserController {
                 }
             }
 
-            await User.update(payload, { where: { id } })
+            await foundUser.update(payload)
             res.status(200).json({
                 success: true,
                 statusCode: 200,
